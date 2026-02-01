@@ -266,12 +266,16 @@ html = f"""
     noBtn.textContent = noTexts[idx];
     growYes();
   }});
-
-  function showFinal() {{
+function showFinal() {{
     questionBox.style.display = "none";
     overlay.style.display = "none";
     finalBox.style.display = "block";
-  }}
+
+    // zmiana tła strony PO kliknięciu "Tak"
+    document.body.style.background = "#ffb6c1";
+}}
+
+
 
   yesBtn.addEventListener("click", showFinal);
   overlayYes.addEventListener("click", showFinal);
