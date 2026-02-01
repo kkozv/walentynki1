@@ -7,19 +7,15 @@ st.markdown(
     """
     <style>
      html, body, [data-testid="stAppViewContainer"] { background: #fffec8 !important; }
-
       .block-container { padding-top: 0.6rem; }
     </style>
     """,
     unsafe_allow_html=True,
-
 )
 
-# GIF na górze (misie / kotki / serduszka) – możesz podmienić
 TOP_GIF_URL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTV1cG9vamdvcWtucm9jYjM2YXY4d2ZkODRvaXR5cmpxODJpaWVmYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SxdT4XwbwAAL5byUyq/giphy.gif"
-  # kotek serduszka
-# GIF na końcu – romantyczny
-FINAL_GIF_URL = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1hNnFyaHM4dzhxbXp5c3VvZzNrZTFtcXRiczh5dXdtOGo0YXlyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ifB1v1W3Db0GIW7uTA/giphy.gif" # przytulające kotki
+
+FINAL_GIF_URL = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1hNnFyaHM4dzhxbXp5c3VvZzNrZTFtcXRiczh5dXdtOGo0YXlyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ifB1v1W3Db0GIW7uTA/giphy.gif"
 
 html = f"""
 <!doctype html>
@@ -48,14 +44,12 @@ html = f"""
     padding: 12px 0 24px;
   }}
 
-  /* To jest nasz "viewport" w iframe – tu zrobimy overlay na koniec */
   .panel {{
     width: min(820px, 96vw);
     position: relative;
     text-align: center;
   }}
 
-  /* serduszka w tle */
   .float-heart {{
     position: absolute;
     font-size: 18px;
@@ -85,7 +79,6 @@ html = f"""
     font-weight: 950;
   }}
 
-  /* Klucz: kolumna -> przycisk rośnie i NIE zasłania tytułu */
   .controls {{
     display: flex;
     flex-direction: column;
@@ -108,17 +101,13 @@ html = f"""
     cursor: pointer;
     font-weight: 900;
     box-shadow: 0 10px 20px rgba(0,0,0,0.14);
-    transition: filter 120ms ease;
   }}
-  button:hover {{ filter: brightness(1.02); }}
 
-  /* Startowe rozmiary */
   #yesBtn {{
     background: var(--yes);
     color: #fff;
     padding: 12px 34px;
     font-size: 20px;
-    line-height: 1;
     min-width: 140px;
     min-height: 48px;
   }}
@@ -128,7 +117,6 @@ html = f"""
     color: #fff;
     padding: 12px 26px;
     font-size: 18px;
-    line-height: 1;
     min-width: 120px;
     min-height: 48px;
   }}
@@ -139,7 +127,6 @@ html = f"""
     font-weight: 700;
   }}
 
-  /* Overlay „pełna plansza” – działa poprawnie w Streamlit iframe */
   .overlay {{
     position: absolute;
     inset: 0;
@@ -156,8 +143,6 @@ html = f"""
     color: white;
     font-weight: 1000;
     font-size: clamp(72px, 16vw, 180px);
-    line-height: 1;
-    margin: 0 0 10px 0;
   }}
 
   .overlay .sub {{
@@ -166,22 +151,21 @@ html = f"""
     margin-bottom: 14px;
   }}
 
-  /* ekran końcowy */
-.final {
+  .final {{
     display: none;
     margin-top: 12px;
     background: #ffb6c1;
     padding: 20px;
     border-radius: 20px;
-}
-
   }}
+
   .final h2 {{
     margin: 0 0 12px 0;
     font-size: clamp(26px, 3.1vw, 42px);
     color: var(--title);
     font-weight: 950;
   }}
+
   .final img {{
     width: min(520px, 92vw);
     border-radius: 16px;
@@ -193,11 +177,10 @@ html = f"""
   <div class="wrap">
     <div class="panel" id="panel">
 
-      <!-- serduszka -->
-      <div class="float-heart" style="left: 10%; top: 320px; animation-delay: 0s;">💗</div>
-      <div class="float-heart" style="left: 22%; top: 340px; animation-delay: 1s;">💖</div>
-      <div class="float-heart" style="left: 78%; top: 330px; animation-delay: .6s;">💗</div>
-      <div class="float-heart" style="left: 90%; top: 350px; animation-delay: 1.4s;">💖</div>
+      <div class="float-heart" style="left: 10%; top: 320px;">💗</div>
+      <div class="float-heart" style="left: 22%; top: 340px;">💖</div>
+      <div class="float-heart" style="left: 78%; top: 330px;">💗</div>
+      <div class="float-heart" style="left: 90%; top: 350px;">💖</div>
 
       <div id="questionBox">
         <img class="top" src="{TOP_GIF_URL}" alt="gif" />
@@ -212,7 +195,6 @@ html = f"""
         </div>
       </div>
 
-      <!-- „pełna strona” w obrębie panelu -->
       <div class="overlay" id="overlay">
         <div class="bigYes">TAK</div>
         <div class="sub">No i elegancko 💖</div>
@@ -252,7 +234,6 @@ html = f"""
 
   let clicks = 0;
 
-  // Realne powiększanie (bez transform), więc NIE zasłania tytułu
   function growYes() {{
     const baseFont = 20;
     const basePadY = 12;
@@ -260,7 +241,6 @@ html = f"""
     const baseMinW = 140;
     const baseMinH = 48;
 
-    // rośnięcie przyjemne wizualnie
     const step = clicks;
     const font = baseFont + step * 10;
     const padY = basePadY + step * 6;
@@ -273,10 +253,8 @@ html = f"""
     yesBtn.style.minWidth = minW + "px";
     yesBtn.style.minHeight = minH + "px";
 
-    // Gdy robi się „gigant” -> pokaz overlay (pełna plansza w panelu)
     if (step >= 6) {{
       overlay.style.display = "flex";
-      // chowamy normalne przyciski/tekst żeby nie mieszało
       document.getElementById("btnRow").style.display = "none";
       hint.textContent = "Dobra… już wiadomo 😌";
     }}
@@ -284,11 +262,8 @@ html = f"""
 
   noBtn.addEventListener("click", () => {{
     clicks += 1;
-
-    // zmiana tekstu "Nie"
     const idx = Math.min(clicks, noTexts.length - 1);
     noBtn.textContent = noTexts[idx];
-
     growYes();
   }});
 
@@ -300,21 +275,6 @@ html = f"""
 
   yesBtn.addEventListener("click", showFinal);
   overlayYes.addEventListener("click", showFinal);
-
-  // Dodatkowe serduszka losowo
-  const panel = document.getElementById("panel");
-  function spawnHeart() {{
-    const h = document.createElement("div");
-    h.className = "float-heart";
-    h.textContent = Math.random() > 0.5 ? "💗" : "💖";
-    h.style.left = Math.floor(Math.random() * 95) + "%";
-    h.style.top = "420px";
-    h.style.animationDuration = (4 + Math.random() * 3) + "s";
-    h.style.opacity = 0.35 + Math.random() * 0.35;
-    panel.appendChild(h);
-    setTimeout(() => h.remove(), 7000);
-  }}
-  setInterval(spawnHeart, 650);
 </script>
 </body>
 </html>
