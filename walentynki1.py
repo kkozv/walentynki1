@@ -17,7 +17,7 @@ st.markdown(
 TOP_GIF_URL = "https://media.giphy.com/media/D9j761FH8SYJLyW9WO/giphy.gif"
   # kotek serduszka
 # GIF na końcu – romantyczny
-FINAL_GIF_URL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDlkYXkycTJnaWxmN3V6NXh2dmlyeW5mZnVnYzgzcm0zZW93MWVweiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pVjdgONguLXtP5llHV/giphy.gif" # przytulające kotki
+FINAL_GIF_URL = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1hNnFyaHM4dzhxbXp5c3VvZzNrZTFtcXRiczh5dXdtOGo0YXlyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ifB1v1W3Db0GIW7uTA/giphy.gif" # przytulające kotki
 
 html = f"""
 <!doctype html>
