@@ -6,7 +6,8 @@ st.set_page_config(page_title="💘", page_icon="💘", layout="centered")
 st.markdown(
     """
     <style>
-      html, body, [data-testid="stAppViewContainer"] { background: #FFF6B3 !important; }
+      html, body, [data-testid="stAppViewContainer"] { background: #FFFBE6 !important; }
+
       .block-container { padding-top: 0.6rem; }
     </style>
     """,
