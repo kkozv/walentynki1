@@ -6,19 +6,17 @@ st.set_page_config(page_title="💘", page_icon="💘", layout="centered")
 st.markdown(
     """
     <style>
-      html, body, [data-testid="stAppViewContainer"] {
-        background: #ffe4ef !important;
-      }
-      .block-container { padding-top: 0.8rem; }
+      html, body, [data-testid="stAppViewContainer"] { background: #ffe4ef !important; }
+      .block-container { padding-top: 0.6rem; }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# GIF z misiami (podmień na dowolny, jeśli chcesz inny)
-BEARS_GIF_URL = "https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif"
-# Ekran końcowy (może być ten sam albo inny)
-FINAL_GIF_URL = "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
+# GIF na górze (misie / kotki / serduszka) – możesz podmienić
+TOP_GIF_URL = "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"   # kotek serduszka
+# GIF na końcu – romantyczny
+FINAL_GIF_URL = "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" # przytulające kotki
 
 html = f"""
 <!doctype html>
@@ -40,21 +38,21 @@ html = f"""
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   }}
 
-  /* CENTROWANIE CAŁEJ ZAWARTOŚCI */
   .wrap {{
-    min-height: 85vh;
+    min-height: 82vh;
     display: grid;
     place-items: center;
-    padding: 18px 0 28px;
+    padding: 12px 0 24px;
   }}
 
+  /* To jest nasz "viewport" w iframe – tu zrobimy overlay na koniec */
   .panel {{
-    width: min(860px, 96vw);
-    text-align: center;
+    width: min(820px, 96vw);
     position: relative;
+    text-align: center;
   }}
 
-  /* Animowane serduszka w tle */
+  /* serduszka w tle */
   .float-heart {{
     position: absolute;
     font-size: 18px;
@@ -67,80 +65,115 @@ html = f"""
   @keyframes floatUp {{
     0%   {{ transform: translateY(40px); opacity: 0; }}
     10%  {{ opacity: 0.55; }}
-    100% {{ transform: translateY(-240px); opacity: 0; }}
+    100% {{ transform: translateY(-260px); opacity: 0; }}
   }}
 
-  .bears {{
-    margin: 0 auto 14px;
-    width: min(320px, 70vw);
+  img.top {{
+    width: min(320px, 75vw);
     border-radius: 18px;
+    margin: 0 auto 12px;
+    display: block;
   }}
 
   h1 {{
     margin: 0 0 18px 0;
-    font-size: clamp(26px, 3.1vw, 40px);
+    font-size: clamp(26px, 3.2vw, 40px);
     color: var(--title);
-    font-weight: 900;
+    font-weight: 950;
   }}
 
-  /* Przestrzeń nad przyciskami żeby YES mógł rosnąć w dół */
-  .spacer {{
-    height: 8px;
+  /* Klucz: kolumna -> przycisk rośnie i NIE zasłania tytułu */
+  .controls {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 8px;
   }}
 
   .btnRow {{
     display: flex;
     justify-content: center;
-    gap: 14px;
     align-items: center;
-    margin-top: 6px;
-    /* ważne: pozwala rosnąć bez wchodzenia na tytuł */
-    padding-top: 10px;
+    gap: 14px;
+    flex-wrap: wrap;
   }}
 
   button {{
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: 800;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    font-weight: 900;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.14);
+    transition: filter 120ms ease;
   }}
+  button:hover {{ filter: brightness(1.02); }}
 
+  /* Startowe rozmiary */
   #yesBtn {{
     background: var(--yes);
     color: #fff;
-    padding: 12px 30px;
-    font-size: 18px;
-    transform-origin: top center; /* rośnie w dół */
-    transition: transform 120ms ease;
+    padding: 12px 34px;
+    font-size: 20px;
+    line-height: 1;
+    min-width: 140px;
+    min-height: 48px;
   }}
 
   #noBtn {{
     background: var(--no);
     color: #fff;
-    padding: 12px 30px;
+    padding: 12px 26px;
     font-size: 18px;
+    line-height: 1;
+    min-width: 120px;
+    min-height: 48px;
   }}
 
   .hint {{
-    margin-top: 12px;
     color: rgba(0,0,0,0.55);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
   }}
 
+  /* Overlay „pełna plansza” – działa poprawnie w Streamlit iframe */
+  .overlay {{
+    position: absolute;
+    inset: 0;
+    background: var(--yes);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 18px;
+    padding: 22px;
+  }}
+
+  .overlay .bigYes {{
+    color: white;
+    font-weight: 1000;
+    font-size: clamp(72px, 16vw, 180px);
+    line-height: 1;
+    margin: 0 0 10px 0;
+  }}
+
+  .overlay .sub {{
+    color: rgba(255,255,255,0.9);
+    font-weight: 800;
+    margin-bottom: 14px;
+  }}
+
+  /* ekran końcowy */
   .final {{
     display: none;
-    text-align: center;
+    margin-top: 12px;
   }}
-
   .final h2 {{
     margin: 0 0 12px 0;
-    font-size: clamp(26px, 3.2vw, 42px);
+    font-size: clamp(26px, 3.1vw, 42px);
     color: var(--title);
     font-weight: 950;
   }}
-
   .final img {{
     width: min(520px, 92vw);
     border-radius: 16px;
@@ -151,24 +184,34 @@ html = f"""
 <body>
   <div class="wrap">
     <div class="panel" id="panel">
-      <!-- SERDUSZKA (wygenerujemy też dodatkowe w JS) -->
-      <div class="float-heart" style="left: 8%; top: 240px; animation-delay: 0s;">💗</div>
-      <div class="float-heart" style="left: 22%; top: 260px; animation-delay: 1s;">💖</div>
-      <div class="float-heart" style="left: 78%; top: 250px; animation-delay: 0.6s;">💗</div>
-      <div class="float-heart" style="left: 90%; top: 270px; animation-delay: 1.4s;">💖</div>
 
-      <div class="question" id="questionBox">
-        <img class="bears" src="{BEARS_GIF_URL}" alt="misie z serduszkami" />
+      <!-- serduszka -->
+      <div class="float-heart" style="left: 10%; top: 320px; animation-delay: 0s;">💗</div>
+      <div class="float-heart" style="left: 22%; top: 340px; animation-delay: 1s;">💖</div>
+      <div class="float-heart" style="left: 78%; top: 330px; animation-delay: .6s;">💗</div>
+      <div class="float-heart" style="left: 90%; top: 350px; animation-delay: 1.4s;">💖</div>
+
+      <div id="questionBox">
+        <img class="top" src="{TOP_GIF_URL}" alt="gif" />
         <h1>Kochanie, zostaniesz moją walentynką?</h1>
 
-        <div class="spacer"></div>
-
-        <div class="btnRow" id="btnRow">
-          <button id="yesBtn" type="button">Tak</button>
-          <button id="noBtn" type="button">Nie</button>
+        <div class="controls">
+          <div class="btnRow" id="btnRow">
+            <button id="yesBtn" type="button">Tak</button>
+            <button id="noBtn" type="button">Nie</button>
+          </div>
+          <div class="hint" id="hint">Kliknij… tylko dobrze wybierz 😈</div>
         </div>
+      </div>
 
-        <div class="hint" id="hint">Kliknij… tylko dobrze wybierz 😈</div>
+      <!-- „pełna strona” w obrębie panelu -->
+      <div class="overlay" id="overlay">
+        <div class="bigYes">TAK</div>
+        <div class="sub">No i elegancko 💖</div>
+        <button id="overlayYes" type="button"
+                style="background:#fff;color:#1b1b1b;padding:12px 18px;border-radius:10px;font-weight:900;">
+          Kliknij tu 💘
+        </button>
       </div>
 
       <div class="final" id="finalBox">
@@ -181,9 +224,13 @@ html = f"""
 <script>
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
-  const finalBox = document.getElementById("finalBox");
-  const questionBox = document.getElementById("questionBox");
   const hint = document.getElementById("hint");
+
+  const questionBox = document.getElementById("questionBox");
+  const finalBox = document.getElementById("finalBox");
+
+  const overlay = document.getElementById("overlay");
+  const overlayYes = document.getElementById("overlayYes");
 
   const noTexts = [
     "Nie",
@@ -196,75 +243,73 @@ html = f"""
   ];
 
   let clicks = 0;
-  let scale = 1.0;
 
-  function maybeFullscreen() {{
-    if (scale >= 4.0) {{
-      // fullscreen dopiero na końcu
-      yesBtn.style.position = "fixed";
-      yesBtn.style.left = "0";
-      yesBtn.style.top = "0";
-      yesBtn.style.width = "100vw";
-      yesBtn.style.height = "100vh";
-      yesBtn.style.borderRadius = "0";
-      yesBtn.style.fontSize = "min(22vw, 220px)";
-      yesBtn.style.zIndex = "9999";
-      yesBtn.style.display = "flex";
-      yesBtn.style.alignItems = "center";
-      yesBtn.style.justifyContent = "center";
-      noBtn.style.display = "none";
-      hint.textContent = "No weź… 😌";
+  // Realne powiększanie (bez transform), więc NIE zasłania tytułu
+  function growYes() {{
+    const baseFont = 20;
+    const basePadY = 12;
+    const basePadX = 34;
+    const baseMinW = 140;
+    const baseMinH = 48;
+
+    // rośnięcie przyjemne wizualnie
+    const step = clicks;
+    const font = baseFont + step * 10;
+    const padY = basePadY + step * 6;
+    const padX = basePadX + step * 14;
+    const minW = baseMinW + step * 60;
+    const minH = baseMinH + step * 20;
+
+    yesBtn.style.fontSize = font + "px";
+    yesBtn.style.padding = padY + "px " + padX + "px";
+    yesBtn.style.minWidth = minW + "px";
+    yesBtn.style.minHeight = minH + "px";
+
+    // Gdy robi się „gigant” -> pokaz overlay (pełna plansza w panelu)
+    if (step >= 6) {{
+      overlay.style.display = "flex";
+      // chowamy normalne przyciski/tekst żeby nie mieszało
+      document.getElementById("btnRow").style.display = "none";
+      hint.textContent = "Dobra… już wiadomo 😌";
     }}
   }}
 
   noBtn.addEventListener("click", () => {{
     clicks += 1;
 
-    // rośnij, ale nie zasłaniaj tytułu (origin ustawiony na top)
-    if (scale < 2.2) scale += 0.22;
-    else if (scale < 3.2) scale += 0.32;
-    else scale += 0.45;
-
-    yesBtn.style.transform = `scale(${{scale}})`;
-
+    // zmiana tekstu "Nie"
     const idx = Math.min(clicks, noTexts.length - 1);
     noBtn.textContent = noTexts[idx];
 
-    maybeFullscreen();
+    growYes();
   }});
 
-  yesBtn.addEventListener("click", () => {{
-    // pokaż finał
+  function showFinal() {{
     questionBox.style.display = "none";
+    overlay.style.display = "none";
     finalBox.style.display = "block";
+  }}
 
-    // zwolnij fullscreen jeśli był
-    yesBtn.style.position = "static";
-    yesBtn.style.width = "";
-    yesBtn.style.height = "";
-    yesBtn.style.borderRadius = "8px";
-    yesBtn.style.fontSize = "18px";
-    yesBtn.style.transform = "scale(1)";
-    yesBtn.style.zIndex = "";
-  }});
+  yesBtn.addEventListener("click", showFinal);
+  overlayYes.addEventListener("click", showFinal);
 
-  // Dodatkowe pływające serduszka (losowo)
+  // Dodatkowe serduszka losowo
   const panel = document.getElementById("panel");
   function spawnHeart() {{
     const h = document.createElement("div");
     h.className = "float-heart";
     h.textContent = Math.random() > 0.5 ? "💗" : "💖";
     h.style.left = Math.floor(Math.random() * 95) + "%";
-    h.style.top = "330px";
+    h.style.top = "420px";
     h.style.animationDuration = (4 + Math.random() * 3) + "s";
-    h.style.opacity = 0.4 + Math.random() * 0.35;
+    h.style.opacity = 0.35 + Math.random() * 0.35;
     panel.appendChild(h);
     setTimeout(() => h.remove(), 7000);
   }}
-  setInterval(spawnHeart, 700);
+  setInterval(spawnHeart, 650);
 </script>
 </body>
 </html>
 """
 
-components.html(html, height=720)
+components.html(html, height=820)
