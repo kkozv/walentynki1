@@ -3,6 +3,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="💘", page_icon="💘", layout="centered")
 
+# Tło startowe (żółte) – zostaje bez zmian
 st.markdown(
     """
     <style>
@@ -17,6 +18,9 @@ TOP_GIF_URL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTV1cG9vamdvcWt
 
 FINAL_GIF_URL = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1hNnFyaHM4dzhxbXp5c3VvZzNrZTFtcXRiczh5dXdtOGo0YXlyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ifB1v1W3Db0GIW7uTA/giphy.gif"
 
+# Kolor tła końcowego (ma pasować do tła gifa po kliknięciu "Tak")
+FINAL_BG = "#ffb6c1"
+
 html = f"""
 <!doctype html>
 <html lang="pl">
@@ -25,7 +29,6 @@ html = f"""
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   :root {{
-    --bg: #ffe4ef;
     --title: #8b1d2c;
     --yes: #2e7d32;
     --no: #b71c1c;
@@ -137,6 +140,7 @@ html = f"""
     flex-direction: column;
     border-radius: 18px;
     padding: 22px;
+    z-index: 50;
   }}
 
   .overlay .bigYes {{
@@ -151,10 +155,26 @@ html = f"""
     margin-bottom: 14px;
   }}
 
-  .final {{
+  /* ========= NAJWAŻNIEJSZE: FULLSCREEN W OBRĘBIE IFRAME (bez żółtej ramki) ========= */
+  .finalOverlay {{
+    position: absolute;
+    inset: -2000px;            /* przykrywa cały widoczny obszar komponentu */
+    background: {FINAL_BG};
     display: none;
-    margin-top: 12px;
-    background: #ffb6c1;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 12px;
+    z-index: 9998;
+  }}
+
+  .finalOverlay .inner {{
+    width: min(820px, 96vw);
+    text-align: center;
+  }}
+
+  .final {{
+    display: none;             /* pokażemy dopiero po kliknięciu "Tak" */
+    background: {FINAL_BG};    /* tło identyczne jak overlay */
     padding: 20px;
     border-radius: 20px;
   }}
@@ -204,10 +224,16 @@ html = f"""
         </button>
       </div>
 
-      <div class="final" id="finalBox">
-        <h2>Wiedziałam, że się zgodzisz!! 💖</h2>
-        <img src="{FINAL_GIF_URL}" alt="final" />
+      <!-- FULLSCREEN końcówka (eliminuje żółtą ramkę Streamlit) -->
+      <div class="finalOverlay" id="finalOverlay">
+        <div class="inner">
+          <div class="final" id="finalBox">
+            <h2>Wiedziałam, że się zgodzisz!! 💖</h2>
+            <img src="{FINAL_GIF_URL}" alt="final" />
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 
@@ -217,10 +243,11 @@ html = f"""
   const hint = document.getElementById("hint");
 
   const questionBox = document.getElementById("questionBox");
-  const finalBox = document.getElementById("finalBox");
-
   const overlay = document.getElementById("overlay");
   const overlayYes = document.getElementById("overlayYes");
+
+  const finalOverlay = document.getElementById("finalOverlay");
+  const finalBox = document.getElementById("finalBox");
 
   const noTexts = [
     "Nie",
@@ -266,16 +293,16 @@ html = f"""
     noBtn.textContent = noTexts[idx];
     growYes();
   }});
-function showFinal() {{
+
+  function showFinal() {{
+    // schowaj wszystko z pytania
     questionBox.style.display = "none";
     overlay.style.display = "none";
+
+    // pokaż fullscreen overlay w kolorze gifa (bez ramki)
+    finalOverlay.style.display = "flex";
     finalBox.style.display = "block";
-
-    // zmiana tła strony PO kliknięciu "Tak"
-    document.body.style.background = "#ffb6c1";
-}}
-
-
+  }}
 
   yesBtn.addEventListener("click", showFinal);
   overlayYes.addEventListener("click", showFinal);
