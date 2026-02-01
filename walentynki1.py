@@ -14,7 +14,7 @@ st.markdown(
 )
 
 # GIF na górze (misie / kotki / serduszka) – możesz podmienić
-TOP_GIF_URL = "https://media.giphy.com/media/D9j761FH8SYJLyW9WO/giphy.gif"
+TOP_GIF_URL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTV1cG9vamdvcWtucm9jYjM2YXY4d2ZkODRvaXR5cmpxODJpaWVmYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SxdT4XwbwAAL5byUyq/giphy.gif"
   # kotek serduszka
 # GIF na końcu – romantyczny
 FINAL_GIF_URL = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1hNnFyaHM4dzhxbXp5c3VvZzNrZTFtcXRiczh5dXdtOGo0YXlyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ifB1v1W3Db0GIW7uTA/giphy.gif" # przytulające kotki
