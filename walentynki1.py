@@ -18,7 +18,7 @@ st.markdown(
 # GIF z misiami (podmień na dowolny, jeśli chcesz inny)
 BEARS_GIF_URL = "https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif"
 # Ekran końcowy (może być ten sam albo inny)
-FINAL_GIF_URL = "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
+FINAL_GIF_URL = "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
 
 html = f"""
 <!doctype html>
