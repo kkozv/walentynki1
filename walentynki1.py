@@ -1,173 +1,283 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="💘", page_icon="💘", layout="centered")
 
+st.markdown(
+    """
+    <style>
+     html, body, [data-testid="stAppViewContainer"] { background: #fffec8 !important; }
+      .block-container { padding-top: 0.6rem; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 TOP_GIF_URL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTV1cG9vamdvcWtucm9jYjM2YXY4d2ZkODRvaXR5cmpxODJpaWVmYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SxdT4XwbwAAL5byUyq/giphy.gif"
+
 FINAL_GIF_URL = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1hNnFyaHM4dzhxbXp5c3VvZzNrZTFtcXRiczh5dXdtOGo0YXlyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ifB1v1W3Db0GIW7uTA/giphy.gif"
 
-START_BG = "#fffec8"   # żółte na start
-FINAL_BG = "#ffb6c1"   # róż jak tło gifa po "Tak"
+html = f"""
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {{
+    --bg: #ffe4ef;
+    --title: #8b1d2c;
+    --yes: #2e7d32;
+    --no: #b71c1c;
+  }}
 
-NO_TEXTS = [
+  body {{
+    margin: 0;
+    background: transparent;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }}
+
+  .wrap {{
+    min-height: 82vh;
+    display: grid;
+    place-items: center;
+    padding: 12px 0 24px;
+  }}
+
+  .panel {{
+    width: min(820px, 96vw);
+    position: relative;
+    text-align: center;
+  }}
+
+  .float-heart {{
+    position: absolute;
+    font-size: 18px;
+    opacity: 0.55;
+    animation: floatUp 6s linear infinite;
+    user-select: none;
+    pointer-events: none;
+  }}
+
+  @keyframes floatUp {{
+    0%   {{ transform: translateY(40px); opacity: 0; }}
+    10%  {{ opacity: 0.55; }}
+    100% {{ transform: translateY(-260px); opacity: 0; }}
+  }}
+
+  img.top {{
+    width: min(320px, 75vw);
+    border-radius: 18px;
+    margin: 0 auto 12px;
+    display: block;
+  }}
+
+  h1 {{
+    margin: 0 0 18px 0;
+    font-size: clamp(26px, 3.2vw, 40px);
+    color: var(--title);
+    font-weight: 950;
+  }}
+
+  .controls {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 8px;
+  }}
+
+  .btnRow {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }}
+
+  button {{
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 900;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.14);
+  }}
+
+  #yesBtn {{
+    background: var(--yes);
+    color: #fff;
+    padding: 12px 34px;
+    font-size: 20px;
+    min-width: 140px;
+    min-height: 48px;
+  }}
+
+  #noBtn {{
+    background: var(--no);
+    color: #fff;
+    padding: 12px 26px;
+    font-size: 18px;
+    min-width: 120px;
+    min-height: 48px;
+  }}
+
+  .hint {{
+    color: rgba(0,0,0,0.55);
+    font-size: 13px;
+    font-weight: 700;
+  }}
+
+  .overlay {{
+    position: absolute;
+    inset: 0;
+    background: var(--yes);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 18px;
+    padding: 22px;
+  }}
+
+  .overlay .bigYes {{
+    color: white;
+    font-weight: 1000;
+    font-size: clamp(72px, 16vw, 180px);
+  }}
+
+  .overlay .sub {{
+    color: rgba(255,255,255,0.9);
+    font-weight: 800;
+    margin-bottom: 14px;
+  }}
+
+  .final {{
+    display: none;
+    margin-top: 12px;
+    background: #ffb6c1;
+    padding: 20px;
+    border-radius: 20px;
+  }}
+
+  .final h2 {{
+    margin: 0 0 12px 0;
+    font-size: clamp(26px, 3.1vw, 42px);
+    color: var(--title);
+    font-weight: 950;
+  }}
+
+  .final img {{
+    width: min(520px, 92vw);
+    border-radius: 16px;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+  }}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel" id="panel">
+
+      <div class="float-heart" style="left: 10%; top: 320px;">💗</div>
+      <div class="float-heart" style="left: 22%; top: 340px;">💖</div>
+      <div class="float-heart" style="left: 78%; top: 330px;">💗</div>
+      <div class="float-heart" style="left: 90%; top: 350px;">💖</div>
+
+      <div id="questionBox">
+        <img class="top" src="{TOP_GIF_URL}" alt="gif" />
+        <h1>Kochanie, zostaniesz moją walentynką?</h1>
+
+        <div class="controls">
+          <div class="btnRow" id="btnRow">
+            <button id="yesBtn" type="button">Tak</button>
+            <button id="noBtn" type="button">Nie</button>
+          </div>
+          <div class="hint" id="hint">Kliknij… tylko dobrze wybierz 😈</div>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay">
+        <div class="bigYes">TAK</div>
+        <div class="sub">No i elegancko 💖</div>
+        <button id="overlayYes" type="button"
+                style="background:#fff;color:#1b1b1b;padding:12px 18px;border-radius:10px;font-weight:900;">
+          Kliknij tu 💘
+        </button>
+      </div>
+
+      <div class="final" id="finalBox">
+        <h2>Wiedziałam, że się zgodzisz!! 💖</h2>
+        <img src="{FINAL_GIF_URL}" alt="final" />
+      </div>
+    </div>
+  </div>
+
+<script>
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const hint = document.getElementById("hint");
+
+  const questionBox = document.getElementById("questionBox");
+  const finalBox = document.getElementById("finalBox");
+
+  const overlay = document.getElementById("overlay");
+  const overlayYes = document.getElementById("overlayYes");
+
+  const noTexts = [
     "Nie",
     "Jesteś pewny?",
     "Na pewno??",
     "Będzie mi przykro…",
     "Ostatnia szansa 😳",
     "Nie rób mi tego 🥺",
-    "Dobra, kliknij TAK 💖",
-]
+    "Dobra, kliknij TAK 💖"
+  ];
 
-# --- stan aplikacji ---
-if "no_clicks" not in st.session_state:
-    st.session_state.no_clicks = 0
-if "stage" not in st.session_state:
-    st.session_state.stage = "ask"  # ask | final
+  let clicks = 0;
 
-# --- obsługa klików przez query params (Python widzi klik, więc może zmienić tło całej strony) ---
-# Streamlit >= 1.30: st.query_params
-try:
-    params = st.query_params
-    ans = params.get("ans")
-except Exception:
-    # fallback dla starszych
-    ans = st.experimental_get_query_params().get("ans", [None])[0]
+  function growYes() {{
+    const baseFont = 20;
+    const basePadY = 12;
+    const basePadX = 34;
+    const baseMinW = 140;
+    const baseMinH = 48;
 
-if ans:
-    if ans == "no" and st.session_state.stage == "ask":
-        st.session_state.no_clicks += 1
-    elif ans == "yes":
-        st.session_state.stage = "final"
+    const step = clicks;
+    const font = baseFont + step * 10;
+    const padY = basePadY + step * 6;
+    const padX = basePadX + step * 14;
+    const minW = baseMinW + step * 60;
+    const minH = baseMinH + step * 20;
 
-    # wyczyść query params, żeby po odświeżeniu nie klikało ponownie
-    try:
-        st.query_params.clear()
-    except Exception:
-        st.experimental_set_query_params()
+    yesBtn.style.fontSize = font + "px";
+    yesBtn.style.padding = padY + "px " + padX + "px";
+    yesBtn.style.minWidth = minW + "px";
+    yesBtn.style.minHeight = minH + "px";
 
-# --- tło globalne (tu znika "ramka") ---
-bg = FINAL_BG if st.session_state.stage == "final" else START_BG
-st.markdown(
-    f"""
-    <style>
-      html, body, [data-testid="stAppViewContainer"] {{
-        background: {bg} !important;
-      }}
-      .block-container {{
-        padding-top: 1.2rem;
-        max-width: 900px;
-      }}
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+    if (step >= 6) {{
+      overlay.style.display = "flex";
+      document.getElementById("btnRow").style.display = "none";
+      hint.textContent = "Dobra… już wiadomo 😌";
+    }}
+  }}
 
-# --- parametry wzrostu przycisku "Tak" ---
-n = st.session_state.no_clicks
-# rośnięcie: font + padding + szerokość
-yes_font = 20 + n * 10
-yes_pad_y = 12 + n * 6
-yes_pad_x = 34 + n * 14
+  noBtn.addEventListener("click", () => {{
+    clicks += 1;
+    const idx = Math.min(clicks, noTexts.length - 1);
+    noBtn.textContent = noTexts[idx];
+    growYes();
+  }});
 
-# po ilu kliknięciach "Nie" robić mega-TAK
-mega = n >= 6
+  function showFinal() {{
+    questionBox.style.display = "none";
+    overlay.style.display = "none";
+    finalBox.style.display = "block";
+  }}
 
-no_label = NO_TEXTS[min(n, len(NO_TEXTS) - 1)]
+  yesBtn.addEventListener("click", showFinal);
+  overlayYes.addEventListener("click", showFinal);
+</script>
+</body>
+</html>
+"""
 
-# --- render ---
-if st.session_state.stage == "final":
-    st.markdown(
-        f"""
-        <div style="text-align:center;">
-          <h2 style="margin:0 0 16px 0; color:#8b1d2c; font-weight:950; font-size: clamp(28px, 3.2vw, 44px);">
-            Wiedziałam, że się zgodzisz!! 💖
-          </h2>
-
-          <div style="
-            background:{FINAL_BG};
-            padding: 18px;
-            border-radius: 22px;
-            display: inline-block;
-          ">
-            <img src="{FINAL_GIF_URL}" style="
-              width: min(560px, 92vw);
-              border-radius: 18px;
-              box-shadow: 0 14px 30px rgba(0,0,0,0.18);
-              display:block;
-            "/>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-else:
-    # ekran pytania
-    st.markdown(
-        f"""
-        <div style="text-align:center; position:relative;">
-          <img src="{TOP_GIF_URL}" style="
-            width: min(340px, 78vw);
-            border-radius: 18px;
-            margin: 0 auto 12px;
-            display:block;
-          " />
-
-          <h1 style="
-            margin: 0 0 18px 0;
-            font-size: clamp(26px, 3.2vw, 40px);
-            color: #8b1d2c;
-            font-weight: 950;
-          ">
-            Kochanie, zostaniesz moją walentynką?
-          </h1>
-
-          <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap; align-items:center;">
-
-            <!-- TAK (rośnie) -->
-            <a href="?ans=yes" style="
-              text-decoration:none;
-              background:#2e7d32;
-              color:white;
-              font-weight:900;
-              border-radius: 10px;
-              box-shadow: 0 10px 20px rgba(0,0,0,0.14);
-              display: inline-flex;
-              align-items:center;
-              justify-content:center;
-              font-size: {yes_font}px;
-              padding: {yes_pad_y}px {yes_pad_x}px;
-              min-width: 140px;
-              min-height: 48px;
-              {'width: min(900px, 96vw); height: 55vh; font-size: min(18vw, 180px); border-radius: 18px;' if mega else ''}
-            ">
-              Tak
-            </a>
-
-            <!-- NIE -->
-            <a href="?ans=no" style="
-              text-decoration:none;
-              background:#b71c1c;
-              color:white;
-              font-weight:900;
-              border-radius: 10px;
-              box-shadow: 0 10px 20px rgba(0,0,0,0.14);
-              display: inline-flex;
-              align-items:center;
-              justify-content:center;
-              font-size: 18px;
-              padding: 12px 26px;
-              min-width: 120px;
-              min-height: 48px;
-              {'display:none;' if mega else ''}
-            ">
-              {no_label}
-            </a>
-          </div>
-
-          <div style="margin-top: 12px; color: rgba(0,0,0,0.55); font-weight:700; font-size:13px;">
-            Kliknij… tylko dobrze wybierz 😈
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+components.html(html, height=820)
