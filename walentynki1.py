@@ -167,9 +167,14 @@ html = f"""
   }}
 
   /* ekran końcowy */
-  .final {{
+.final {
     display: none;
     margin-top: 12px;
+    background: #ffb6c1;
+    padding: 20px;
+    border-radius: 20px;
+}
+
   }}
   .final h2 {{
     margin: 0 0 12px 0;
